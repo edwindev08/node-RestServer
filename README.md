@@ -3,4 +3,4 @@
 Plantilla para crear proyectos de nodeJS
 para instalar ```npm install``` para comenzar el un nuevo proyecto.
 
-### Version de producción lista
+## Version de producción lista v2.0.0
