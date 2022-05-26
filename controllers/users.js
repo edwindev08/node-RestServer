@@ -1,6 +1,6 @@
 const { response, request } = require('express')
 const bcryptjs = require('bcryptjs');
-const User = require('../models/users'); 
+const User = require('../models/user'); 
 
 
 const getUsers = async(req= request, res = response) => {
@@ -51,7 +51,7 @@ const putUser = async(req, res = response) => {
         resto.password = bcryptjs.hashSync( password, salt )
     }
 
-    const user = await User.findByIdAndUpdate(id, resto);
+    const user = await User.findOneAndUpdate(id, resto, {new: true});
 
     res.json({
         user
@@ -67,13 +67,13 @@ const patchUser = (req, res = response) => {
 const deleteUser = async(req, res = response)=>{
 
     const { id } = req.params;
+    const user = await User.findByIdAndUpdate( id, { estado: false }, {new: true} );
 
     // Borrar de la base de datos
     //const user = await User.findByIdAndDelete(id);
-    const user = await User.findByIdAndUpdate( id, { estado: false } );
-
-
-    res.json(user)
+    res.json( user )
+    
+    
 }
 
 
