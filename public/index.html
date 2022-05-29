@@ -35,7 +35,7 @@
            
            fetch(window.location.hostname.includes('localhost')
                ?'http://localhost:3000/api/auth/google'
-               :'https://nodejs-restserver-init.herokuapp.com/', {
+               :'https://nodejs-restserver-init.herokuapp.com/api/auth/google', {
 
                     method: 'POST', // Defino la ruta con el metodo POST
                     headers: {
