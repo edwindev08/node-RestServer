@@ -33,11 +33,14 @@
            // tomo el id_token que viene en la response.credential de google y lo paso a mi const body
            const body = { id_token: response.credential }; 
            
-           fetch('http://localhost:3000/api/auth/google', {
-               method: 'POST', // Defino la ruta con el metodo POST
-               headers: {
-                   'Content-Type':'application/json'
-               },
+           fetch(window.location.hostname.includes('localhost')
+               ?'http://localhost:3000/api/auth/google'
+               :'https://nodejs-restserver-init.herokuapp.com/', {
+
+                    method: 'POST', // Defino la ruta con el metodo POST
+                    headers: {
+                        'Content-Type':'application/json'
+                    },
                body: JSON.stringify(body)
            })
                 .then( res => res.json() )
