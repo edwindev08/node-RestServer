@@ -1,6 +1,6 @@
 const bcryptjs = require('bcryptjs');
 const { response } = require('express'); 
-const { json } = require('express/lib/response');
+
 const { generarJWT } = require('../helpers/generar-jwt');
 const { googleVerify } = require('../helpers/google-verify');
 const User = require('../models/user');
@@ -75,13 +75,15 @@ const googleSignIn = async(req, res = response ) => {
             };
 
             user = new User( data );
+            
             await user.save();
+            
         }
 
         // Si el usuario en DB
         if( !user.estado ) {
             return res.status(401).json({
-                msg: 'Hable con el administrado usuario bloqueado'
+                msg: 'Hable con el administrador usuario bloqueado'
             });
         }
 
@@ -94,7 +96,7 @@ const googleSignIn = async(req, res = response ) => {
         })
 
     } catch (error) {
-        json.status(400).json({
+        res.status(400).json({
             ok: false,
             msg: 'El token no se pudo verificar'
         })
