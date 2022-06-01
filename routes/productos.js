@@ -50,9 +50,6 @@ router.post('/', [
 router.put('/:id',[
     validarJWT,
     check('id', 'No es un id valido').isMongoId(),
-    check('categoria', 'No es un id de Mongo').isMongoId(),
-    check('lab', 'No es un id de Mongo').isMongoId(),
-    check('presentacion', 'No es un id de Mongo').isMongoId(),
     check('id').custom( existeProdID ),
     hasRole('ADMIN_ROLE','VENTAS_ROLE'),
     validarCampos

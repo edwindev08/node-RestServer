@@ -10,11 +10,11 @@ const User = require('./user')
 
 
 module.exports = {
+    User,
     Categoria,
     Laboratorio,
     Presentacion,
     Producto,
     Role,
-    Server,
-    User,
+    Server
 }

@@ -84,19 +84,25 @@ const crearProducto = async(req, res = response) => {
 const actualizarProducto = async(req, res = response) => {
 
     const {id} = req.params
-
-    const {estado, user, ...data} = req.body
+ 
+    const {estado, ...data} = req.body
+    
 
     if(data.nombre) {
         
-        data.nombre = data.nombre.toUpperCase()
+        const prodDB = await Producto.findOne({ nombre: data.nombre.toUpperCase() })
+        if (prodDB) {
+            return res.status(400).json({
+                msg: `El producto ${ prodDB.nombre }, ya existe`
+            })
+        }
+
     }
-
-    data.user = req.user._id;
-
-    //const userUdated = await User.findById( data.user ) 
-    const producto = await Producto.findOneAndUpdate(id, data, {new: true});
     
+    console.log(id)
+    //const userUdated = await User.findById( data.user ) 
+    const producto = await Producto.findByIdAndUpdate(id, data, {new: true});
+    console.log(producto)
     res.json(producto)
      
     

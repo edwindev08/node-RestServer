@@ -58,7 +58,7 @@ const ProductoSchema = Schema({
 })
 
 ProductoSchema.methods.toJSON = function() {
-    const { __v, estado, ...data} = this.toObject();
+    const { __v, estado, _id, ...data} = this.toObject();
     return data;
 }
 
