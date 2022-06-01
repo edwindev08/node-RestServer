@@ -6,7 +6,7 @@ const {
     getProducto,
     actualizarProducto,
     borrarProducto
- } = require('../controllers/Productos');
+ } = require('../controllers/productos');
 const { 
     validarJWT,
     validarCampos,
