@@ -17,15 +17,15 @@ const uploadFile = (req, res = response ) => {
 
     console.log(imgName)
 
-    // const uploadPath = path.join(__dirname, '../uploads/', img.name);
+    const uploadPath = path.join(__dirname, '../uploads/', img.name);
 
-    // img.mv(uploadPath, (err) => {
-    //     if (err) {
-    //     return res.status(500).json({err});
-    //     }
+    img.mv(uploadPath, (err) => {
+        if (err) {
+        return res.status(500).json({err});
+        }
 
-    //     res.json({msg: 'File uploaded to ' + uploadPath});
-    // });
+        res.json({msg: 'File uploaded to ' + uploadPath});
+    });
 
 }
 
