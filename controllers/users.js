@@ -1,25 +1,24 @@
 const { response, request } = require('express')
 const bcryptjs = require('bcryptjs');
-const User = require('../models/user')
+const User = require('../models/user');
+const { Role } = require('../models');
+
 
 
 const getUsers = async(req= request, res = response) => {
 
-    const { limite = 5, desde = 0 } = req.query;
+    const { limite = 10, desde = 0 } = req.query;
     const query = { estado: true }
     
-    const [ total, users ] = await Promise.all([
-        User.countDocuments( query ),
-        User.find( query )
+    const users = await Promise.all([
+        //User.countDocuments( query ),
+        User.find( query )  
             .skip(Number(desde))
             .limit(Number(limite))
 
     ])
 
-    res.json({
-        total,
-        users
-    })
+    res.json(users)
 }
 
 //obtener usuario
@@ -27,19 +26,54 @@ const getUsers = async(req= request, res = response) => {
 const postUser = async(req, res = response) => {
 
     const { nombre, correo, password, rol } = req.body
-    const user = new User({ nombre, correo, password, rol });
+    console.log(nombre)
+    
+        const dbUser = await User.findOne({correo})
+        
+        if ( dbUser ) {
+            return res.status(400).json({
+                ok: false,
+                msg: `El correo ${ correo } ya existe`
+            });
+        }
 
-    // Encriptar la contraseña
-    const salt = bcryptjs.genSaltSync();
-    user.password = bcryptjs.hashSync( password, salt )
+        const existeRole = await Role.findOne({rol});
+        if(!existeRole) {
+        //throw new Error(`El rol ${rol} no está en la base de datos`)
+            return res.status(400).json({
+                ok: false,
+                msg: `El rol ${ rol } no es valido`
+            });
+        }
+        
 
-    // Guardar en base de datos
-    await user.save();
+        const user = new User({ nombre, correo, password, rol });
+
+        // Encriptar la contraseña
+        const salt = bcryptjs.genSaltSync();
+        user.password = bcryptjs.hashSync( password, salt )
+
+        // Guardar en base de datos
+        await user.save();
     
 
-    res.json({
-        user
-    })
+        res.json({
+        ok: true,
+        uid: user.id,
+        nombre,
+        correo,
+        rol
+        })
+    // } catch (error) {
+    //     console.log(error);
+    //     return res.status(500).json({
+    //         ok: false,
+    //         msg: 'Por favor hable con el administrador'
+    //     });
+    // }
+
+
+    
 }
 
 const putUser = async(req, res = response) => {
@@ -77,6 +111,8 @@ const deleteUser = async(req, res = response)=>{
     
     
 }
+
+
 
 
 module.exports = {

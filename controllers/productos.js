@@ -99,7 +99,7 @@ const actualizarProducto = async(req, res = response) => {
 
     }
     
-    console.log(id)
+    //console.log(id)
     //const userUdated = await User.findById( data.user ) 
     const producto = await Producto.findByIdAndUpdate(id, data, {new: true});
     console.log(producto)

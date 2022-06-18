@@ -1,3 +1,4 @@
+const { response, request } = require('express')
 const { 
     Categoria,
     Laboratorio, 
@@ -9,22 +10,34 @@ const {
 
 
 
-const esRolValido = async(rol = '') => {
-
+const esRolValido = async(req, res= response) => {
+    const { rol } = req.body
+    console.log(rol)
     const existeRole = await Role.findOne({rol});
     if(!existeRole) {
-        throw new Error(`El rol ${rol} no está en la base de datos`)
+        //throw new Error(`El rol ${rol} no está en la base de datos`)
+        return res.status(400).json({
+            ok: false,
+            msg: `El rol ${ rol } no es valido`
+        });
     }
 }
 
 
 
 // V erificar si el correo existe
-const emailExiste = async(correo = '') => {
+const emailExiste = async(correo='', req, res = response) => {
 
-    const emailExist = await User.findOne({ correo })
+    //const { correo } = req.body
+
+    const emailExist = await User.findOne({correo})
+
     if ( emailExist ) {
-        throw new Error(`El correo: ${correo} ya esta registrado`)
+        throw new Error(`El correo ${ correo } ya existe`)
+        // return res.status(400).json({            
+        //     ok: false,
+        //     msg: `El correo ${ correo } ya existe`
+        // });
     }
 }
 

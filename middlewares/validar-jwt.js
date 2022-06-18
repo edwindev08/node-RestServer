@@ -9,14 +9,16 @@ const validarJWT = async(req = request, res = response, next) => {
 
     if( !token ){
         return res.status(401).json({
+            ok: false,
             msg: 'No envió el token en la petición'
         });
     }
 
     try {
 
-        const { uid } = jwt.verify( token, process.env.SECRETORPRIVATEKEY );
-        
+        const { uid, nombre } = jwt.verify( token, process.env.SECRETORPRIVATEKEY );
+        req.uid  = uid;
+        req.nombre = nombre;
         //leer usuario del uid
         const user = await User.findById( uid );
 
@@ -30,7 +32,7 @@ const validarJWT = async(req = request, res = response, next) => {
          // Verificar si el uid tiene estado true
         if ( !user.estado ){
             return res.status(401).json({
-                msg: 'Token no valido - user desactivado'
+                msg: 'Token no valido - usuario desactivado'
             })
         }
 

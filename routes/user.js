@@ -29,9 +29,9 @@ router.get('/', getUsers)
 router.post('/',[
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
     check('password', 'El password debe tener mas de 4 caracteres').isLength({ min:4 }),
-    check('correo').custom( emailExiste ),
+    //check('correo').custom( emailExiste ),
     //check('rol', 'No es un rol válido').isIn(['ADMIN_ROLE','USER_ROLE']),
-    check('rol').custom( esRolValido ),
+    //check('rol').custom( esRolValido ),
     validarCampos
 ], postUser )
 

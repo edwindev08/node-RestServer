@@ -15,13 +15,14 @@ const login = async(req, res = response) => {
         const user = await User.findOne({ correo });
         if ( !user ) {
             return res.status(400).json({
-                msg: 'Usuario / Password no son correctos'
+                ok: false,
+                msg: 'El usuario o password no son correctos'
             });
         }
         // Verificar si usuario esta activo
         if ( !user.estado ) {
             return res.status(400).json({
-                msg: 'Usuario / Password no son correctos - estado'
+                msg: 'El usuario se encuentra desactivado'
             });
         }
 
@@ -29,16 +30,20 @@ const login = async(req, res = response) => {
         const valiPass = bcryptjs.compareSync( password, user.password );
         if ( !valiPass ) {
             return res.status(400).json({
-                msg: 'Usuario / Password no son correctos - password'
+                msg: 'El usuario o password no son correctos'
             })
         }
 
         // Generar el JWT
         const token = await generarJWT(user.id);
-
+        
         res.json({
-            user,
-            token
+            ok: true,
+            uid: user.id,
+            nombre: user.nombre,
+            correo: user.correo,
+            token,
+            //user,
         })
         
     } catch (error) {
@@ -92,7 +97,8 @@ const googleSignIn = async(req, res = response ) => {
 
         res.json({
             user,
-            token
+            token,
+            ok: true
         })
 
     } catch (error) {
@@ -104,11 +110,33 @@ const googleSignIn = async(req, res = response ) => {
 
 }
 
+const revalidarToken = async(req, res = response ) => {
+
+    const { uid } = req;
+
+    // Leer la base de datos
+    const user = await User.findById(uid);
+    //console.log(user)
+
+    // Generar el JWT
+    const token = await generarJWT( uid, user.nombre );
+
+    return res.json({
+        ok: true,
+        uid, 
+        nombre: user.nombre,
+        correo: user.correo,
+        token
+    });
+
+}
+
 
 
 
 module.exports = {
     login,
-    googleSignIn
+    googleSignIn,
+    revalidarToken
 }
 
